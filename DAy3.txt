@@ -1,0 +1,82 @@
+PLSQL
+-----------------------
+
+Anonymus Blocks
+
+WA Program to  fetch the salary of an employee with empno 101 and print the salary as "Salary is xxxx".
+
+set serveroutput on;
+  DECLARE
+	sal number;
+  BEGIN
+	select salary INTO sal from employees where employee_id=101;
+	 dbms_output.put_line('Salary is '|| sal);
+  END;
+  /
+WA Program to  fetch the salary and firstname of an employee with empno 101 and print the data as "Name : xxxx Salary : xxxx"
+  DECLARE
+	fname varchar2(20);
+	sal number;
+  BEGIN
+	select first_name,salary INTO fname,sal from employees where employee_id=101;
+	 dbms_output.put_line('Name : ' ||fname ||' Salary : '|| sal);
+  END;
+
+
+PROCEDURE
+--------------
+	CREATE OR REPLACE PROCEDURE  updateSalofEmp
+	as
+	BEGIN
+		update Employee set salary= salary+500;
+		commit;
+	END;
+	/
+	EXECUTE updateSalofEmp;
+With Arguments
+-----------------------------
+	CREATE OR REPLACE PROCEDURE  updateSalofEmp(eno number , sal number )
+	as
+	BEGIN
+		update Employee set salary=sal where empno=eno;
+		commit;
+	END;
+	/
+	EXECUTE updateSalofEmp(112 , 23000);
+
+FUNCTIONS
+---------------------
+	CREATE or REPLACE FUNCTION  getFullName(empno  number)
+	RETURN varchar2
+	AS
+		fullName varchar2(30);
+	BEGIN
+		select first_name||last_name INTO fullName from Employees where employee_id=empno;
+		RETURN fullName;
+	END;
+	/
+	
+select employee_id , getFullName(employee_id) as NAME from Employees; //WAY 1 
+//WAy 2
+declare 
+	fname varchar2(20);
+begin
+	fname :=getFullName(100);
+	dbms_output.put_line('Name :'||fname);
+end;
+/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

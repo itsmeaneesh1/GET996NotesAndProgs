@@ -1,0 +1,390 @@
+
+Day 2  
+--------------------
+Constraints 
+
+	CREATE TABLE Sparta
+	(
+		idno NUMBER,
+		name VARCHAR2(20),
+		city VARCHAR2(20)  DEFAULT 'Sparta'
+	);
+
+	insert into Sparta(idno,name) values(101 , 'Dexter');
+
+	insert into Sparta values(102 , 'Nano',default);
+
+NOT NULL constraint
+	DROP TABLE Sparta;
+
+	CREATE TABLE Sparta
+	(
+		idno NUMBER,
+		name VARCHAR2(20) NOT NULL
+	);
+	insert into Sparta values(null , 'Nano') ; //Valid
+	insert into Sparta values(100, null ) ;  // Invalid
+	insert into Sparta(idno) values(101); // Invalid
+
+UNIQUE Constraint
+                 	CREATE TABLE Sparta
+	(
+		idno NUMBER,
+		Email varchar2(20) UNIQUE
+	);
+	CREATE TABLE Sparta
+	(
+		idno NUMBER,
+		Email varchar2(20)  CONSTRAINT unqSparta UNIQUE  //Column Level Constraint	
+	);
+	//Table Level Constraint
+	CREATE TABLE Sparta
+	(
+		idno NUMBER,
+		Email varchar2(20),
+		CONSTRAINT unqSparta UNIQUE(Email)	
+	);
+
+PRIMARY KEY
+	CREATE TABLE Sparta
+	(
+		idno NUMBER CONSTRAINT spkPrimary PRIMARY KEY,
+		Email varchar2(20) UNIQUE
+	);
+
+
+FOREIGN KEY Constraint
+
+		create table Products
+		(
+			Prodid number PRIMARY KEY,
+			ProdName varchar(20)
+		);
+		insert into Products values(100,'Pen');
+		insert into Products values(101,'Towel');
+
+		create table ProductSales
+		(
+			billNo number primary key,
+			Prodid number REFERENCES  Products(Prodid) ON DELETE CASCADE
+		);
+
+		create table ProductSales
+		(
+			billNo number primary key,
+			Prodid number,
+			CONSTRAINT fkcon FOREIGN KEY(Prodid) REFERENCES Products(Prodid)
+		);
+		insert into ProductSales values(1,100); //VALID
+		insert into ProductSales values(2,101); //VALID
+		insert into ProductSales values(3,200); //INVALID _Parent key not found
+		insert into ProductSales values(3,null); //VALID
+
+CHECK Constraint
+
+		
+	CREATE TABLE Sparta
+	(
+		idno NUMBER,
+		Name varchar2(20),
+		Age   number CONSTRAINT ageCheck CHECK(Age >18 ),
+		Salary number CONSTRAINT checkSal CHECK(Salary <10000 ),
+		City  varchar2(20) CONSTRAINT chekLoc CHECK( City IN ('Mahape','Chennai') ),
+		PsNo varchar2(20)  CHECK( PsNo LIKE 'PS%')
+	);
+	insert into Sparta values(100,'Ann' ,21 ,5000 , 'Chennai','PS001'); // VALID
+	insert into Sparta values(101,'Ram' ,12 ,5000 , 'Chennai','PS001'); // INVALID
+	insert into Sparta values(101,'Ram' ,21 ,15000 , 'Chennai','PS001'); // INVALID
+	insert into Sparta values(101,'Ram' ,21 ,5000 , 'Mumbai','PS001'); // INVALID
+	insert into Sparta values(101,'Ram' ,21 ,5000 , 'Mahape','G0011'); // INVALID
+
+
+Task:
+	Create a table named Department01 with following columns and constraints
+		ColumnName	type	Rules
+		------------------------------------------------------------
+		deptno		number	  must be primary key
+		deptname		varchar	    must be uniqe
+		location 		varchar	  shouldnot allow nulls 
+
+	Create a table named Employee01 with following columns and constraints
+		ColumnName	type	Rules
+		------------------------------------------------------------
+		empno		number	  must be primary key
+		FirstName		varchar	  shouldnot allow nulls
+		LastName 	varchar	  should  allow nulls 
+		Job 		varchar	  job must be 'dev','manager','sa_rep'
+		Salary		number	  must be between  10000 and 80000  
+					( CHECK(Salary BETWEEN 10000 and 80000)
+		Phone		varchar	  must be of length 10	Use LIKE with '% / _
+		Email		varchar	  must be proper format xx@xx.xx	LIKE '_%@_%._%
+		DeptNo		number	  Should be a foreign key to Department01->DeptNo
+
+
+
+DQL
+----------------------
+
+WHERE
+
+	select * from Employees where Department_id=100;
+
+	select * from Employees where First_Name= 'John'
+
+	select * from Employees where  hire_date='09/28/2005'
+
+WAQ to display the employees who is getting salary between 5000 and 10000.
+
+BETWEEN  ( Range Operator )
+---	
+	select * from Employees where salary>=5000 and salary<=10000;
+
+	select * from Employees where salary BETWEEN 5000 and 10000;
+
+NOT BETWEEN
+	
+	select * from Employees where salary NOT BETWEEN 5000 and 10000;
+
+
+WAQ to display the employees who joined between 2002 and 2005.
+
+	select * from Employees where hire_date BETWEEN '01/01/2002' and '12/31/2005'
+
+	select * from Employees where hire_date BETWEEN '01-JAN-2002' and '31-DEC-2005'
+
+LIST Operators ( IN , NOT IN )	
+
+	select * from Employees where Department_id IN ( 100 ,60 ,70 ,40 );
+
+	select * from Employees where Department_id NOT IN ( 100 ,60 ,70 ,40 );
+
+PATTERN MATCHING ( LIKE  -  % , _ )
+
+WAQ to display the employees whose FirstName starts with 'D'
+
+	select * from Employees where First_Name LIKE  'D%'
+
+WAQ to display the employees whose FirstName ends with 's'
+
+	select * from Employees where First_Name LIKE  '%s'
+
+WAQ to display the employees whose FirstName's third letter is 'a'.
+	
+	select * from Employees where First_Name LIKE '__a%'
+
+
+NULL Operators ( IS NULL / IS NOT NULL )
+
+WAQ to display the employees who do not have a manager.	
+
+select * from Employees where manager_id IS NULL;
+
+select * from Employees where commission_pct IS NULL;
+
+select * from Employees where commission_pct IS NOT NULL;
+
+
+ORACLE BUILT IN FUCNTIONS
+----------------------------------------------
+
+	Single Row vs MultiRow
+
+	Character Functionss
+----------------------	
+	select LOWER('HANS') from DUAL;	--hans
+	select UPPER('jack') from DUAL;	--JACK
+	select INITCAP('jack sparrow') from DUAL; -- Jack Sparrow
+	select CONCAT('Hello','World' ) from dual;	 --HelloWorld
+	select SUBSTR('Sparrow' , 3 ,5) from dual; --arrow
+	select SUBSTR('Sparrow' , 5, 2) from dual; -- ro
+	select SUBSTR('Sparrow' , -1,1) from dual; --w
+	select SUBSTR('Sparrow' , -3 ,5) from dual; -- row
+
+	select LENGTH('a b c d') from dual; -- 7
+	select INSTR('Hakuna Matata' , 'k') from dual;  --3
+	select INSTR('Hakuna Matata' , 'a') from dual;  --2
+	select INSTR('Hakuna Matata' , 'ta') from dual; --10
+	
+	select LPAD(1000, 10, '*') from dual;	--   ******1000
+	select RPAD(1000, 10, '$') from dual;	--  1000$$$$$$ 
+
+	select REPLACE('Some Text' , 'o' ,'a') from dual;	--Same Text
+	select TRIM('a' from 'action') from dual;	--ction
+	select TRIM('a' from 'ayana') from dual;	-- yan
+
+WAQ to display the employee firstname , lastname and job in the following format.
+	NAME	JOB
+--------------------------------------
+	S.King	AD_PRES
+	N.Kochar	AD_VP
+	
+
+	select concat(substr(First_Name,1,1)||'.',Last_Name) as NAME ,JOB_ID from Employees;
+	select substr(First_Name,1,1) || '.'|| Last_Name as NAME ,JOB_ID from Employees;
+	select concat(concat(substr(First_Name,1,1),'.'),Last_Name) as NAME ,JOB_ID from Employees;
+
+WAQ to display the employee firstname , lastname and job in the following format.
+	NAME	JOB
+--------------------------------------
+	S.K2g	AD_PRES
+	N.K4r	AD_VP
+
+	select substr(First_Name,1,1) || '.'|| substr(Last_Name,1,1)||length(Last_Name)-2||substr(last_name,-1,1) as NAME ,
+			JOB_ID from Employees;
+
+NUMERIC FUNCTIONS
+------------------------
+			ROUND, TRUNC ,MOD
+
+	select ROUND(123.567 ,2 ) from DUAL;	--123.57
+	select ROUND(123.567 ,0 ) from DUAL;	--124
+	select ROUND(123.567 ,-1 ) from DUAL;	--120
+	select ROUND(123.567 ,-2 ) from DUAL;    --100
+	select ROUND(178.567 ,-2 ) from DUAL; 	--200
+
+	select TRUNC(123.567 ,2 ) from dual;	--123.56
+	select TRUNC(123.567 ,0 ) from dual;	--123
+
+	select MOD(1000,3) from dual; 		-- 1
+
+
+DATE functions:
+		select SYSDATE from Dual; --19-AUG-21
+
+		select (SYSDATE - hire_date) as DAYSDIFF  from  Employee;
+
+		select MONTHS_BETWEEN(sysdate,hire_date) from Employee;
+
+		select MONTHS_BETWEEN(sysdate,'01-JAN-21') from DUAL;
+
+		select ADD_MONTHS(sysdate,5) from dual;	
+
+		select NEXT_DAY(sysdate,'SUNDAY') from DUAL;
+		select NEXT_DAY(sysdate,'THURSDAY') from DUAL;
+
+		select LAST_DAY(sysdate) from DUAL;
+
+		select EXTRACT(YEAR from SYSDATE) from dual; --2021
+		
+		select EXTRACT(MONTH from SYSDATE) from dual; --8
+
+WAQ to display the empno , FirstName ,hiredate and experience in years as EXP_YEARS of all employees. Experience should be truncated.
+
+		select Employee_id,First_Name,hire_date, trunc((months_between(sysdate,hire_date)/12),0) as EXP_YEARS
+		from Employees;
+
+
+CONVERSION Functions
+---------------------------------------
+		Date -> Char  ( TO_CHAR( date , 'format')  (Formats - YY,YYYY,YEAR,MM,MON,MONTH,DD,DY,HH,SS,MI etc.)
+
+
+	select TO_CHAR(sysdate, 'DD-MONTH-YYYY') from dual;
+	select TO_CHAR(sysdate, 'DD-MONTH-YEAR') from dual;
+	select TO_CHAR(sysdate, 'DY-MM-YY') from dual;
+	select TO_CHAR(sysdate, 'HH:MI:SS') from dual;
+	select TO_CHAR(sysdate, 'HH24:MI:SS AM') from dual;
+
+		Number -> Char ( TO_CHAR( number, 'format'))  ( 9 , 0, $ , L , . ,  , )
+
+	select To_Char(1234 , '$99,999.00') from dual;	-- $1,234.00
+
+	select To_Char(156234 , 'L9,99,999.00') from dual;
+
+		Char -> Date  ( TO_DATE( 'char' ,'format' )
+
+	select to_date('10-04-2020','DD-MM-YYYY') from dual;
+
+	select TO_CHAR(to_date('10-04-2020','DD-MM-YYYY'), 'DD-MONTH-YEAR') from dual;
+
+		Char ->Number ( TO_NUMBER('char','format')
+
+	select round(To_NUMBER('$1234.678' , '$9999.999') ,2) from dual;
+
+
+GENERAL FUNCTIONS  ( NVL , NVL2 , NULLIF ,COALESCE )
+
+WAQ to display the empno,firstname,salary ,comm and sal+comm as totalsal of employees.
+
+	select employee_id,first_name,salary, NVL(commission_pct,0) , salary+NVL(commission_pct,0) as totalsal from employees;
+
+	select employee_id,first_name,salary, NVL(commission_pct,0) ,
+			 NVL2(commission_pct, salary+commission_pct , salary ) as totalsal from employees;
+
+	NULLIF
+		select NULLIF(10,10) from dual;	-- null
+		select NULLIF(10,5) from dual;		-- 10
+		select NULLIF(10,20) from dual;	-- 10
+		select NULLIF('a','a') from dual;		-- null
+
+	COALESCE ( Multi column null checking )
+
+		select COALESCE ( phone , email , address , 'NA') ..
+
+		select  first_name, commission_pct , manager_id, 
+			COALESCE(commission_pct , manager_id,0) from employees;
+
+CASE 
+
+	select First_Name, job_id , 
+		CASE  job_id WHEN 'AC_MGR' THEN 'Manager'
+			     WHEN 'AD_VP' THEN 'Vice President'
+			     WHEN 'IT_PROG' THEN 'Programmer'
+			      ELSE 'No Job' END  as JOBDATA from Employees;
+			
+
+AGGREGATE FUNCTIONS
+		MIN() , MAX() , AVG() ,COUNT() ,COUNT(*) , SUM() 
+
+	
+select min(salary) , max(salary) ,avg(salary),sum(salary) from Employees;
+
+select count(*) as EMP_COUNT from Employees;
+
+select count(commission_pct) as Emps_with_Comm from Employees;
+
+
+
+GROUP BY ( Subtotals)
+
+WAQ to display the department_id and maximum salary in each department.
+
+	select department_id, max(salary)  from Employees GROUP BY department_id;
+
+WAQ to display the department_id  and no of employees working in that department as EmpCount .
+
+	select department_id,count(*) as EmpCount from Employees GROUP BY department_id;
+
+WAQ to display the department_id,job_is  and display the departmentwise jobwise empcount.
+
+	select department_id,job_id,count(*) as EmpCount from Employees GROUP BY department_id,job_id;
+
+WAQ to display the department_id  and no of employees working in that department as EmpCount .Display the departements only if it contains more than 3 employees. 
+
+	select department_id,count(*) as EmpCount 
+	from Employees GROUP BY department_id HAVING count(*)>3
+
+
+1. WAQ to display the job_id and count of employees doing that job (column alias EMP_COUNT)
+
+2. WAQ to display the month name and count of employees joined in that month .(column alias EMp_COUNT)
+
+3. WAQ to display the manager_id and display the total salary of employees under that manager ( Column alias Total Sal)
+
+4. WAQ to display the manager_id and display the total salary of employees under that manager ( Column alias Total Sal)
+    If there are people with no manager , display as 'No Manager ' and empcount.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

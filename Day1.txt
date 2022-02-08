@@ -1,0 +1,176 @@
+
+
+
+Task : Normalization
+
+U have been assigned the task of making a database design for Online Shopping Project. On project analysis the following information has be maintained in the database.
+
+CustomerID,FirstName,LastName, City , Phone ,Email , ProductID,ProductName,Category,SupplierID ,SupplierName, SupplierAddress,
+CartID , BillNo , BillAmount, BillDate , StaffInCounter , StaffID , StaffName, JoinDate ,ProductAvailableStock , CustomerPassword,StaffPassword.
+
+Normalize the data , organize into multiple tables , make proper relations.
+
+
+DDL ( Data Definition Language )
+-----------------
+creating tables
+
+		CREATE TABLE  Sample123
+		(
+			IdNo NUMBER,
+			Name VARCHAR2(20),
+			City VARCHAR2(20)
+		);
+
+		syntax:
+			create table <<TableName>>
+			(
+				ColumnName Datatype(Size) constraints ... ,
+				ColumName ....
+			)
+
+
+		DESC Sample123  - To retrieve the table structure..
+
+
+
+	Name CHAR(20)	- AMAN
+	
+	Name VARCHAR(20) - AMAN
+
+
+Modifying Table:
+
+	Adding New Columns 
+
+		ALTER TABLE Sample123 ADD  Age NUMBER;
+
+	Removing Existing Columns
+		
+		ALTER TABLE Sample123 DROP COLUMN City;
+
+	Modify the column type
+	
+		ALTER TABLE Sample123 ADD  City VARCHAR(20);
+
+		ALTER TABLE Sample123 MODIFY City VARCHAR2(30);
+
+Removing Tables
+		DROP TABLE Sample123;
+
+Truncating Data
+		TRUNCATE TABLE Sample123;
+
+DML ( Data Manipulation Language )
+
+	Inserting Records
+
+		INSERT INTO Sample123 VALUES ( 100 , 'Jack' ,'Delhi' );
+	
+		INSERT INTO Sample123(idno,name,city) VALUES ( 101 , 'Jill' ,'Delhi' );  // Recommended
+
+		INSERT INTO Sample123  VALUES(102, 'Jahan' ,null ); // Partial Data Insert
+
+		INSERT INTO Sample123(idno,name)  VALUES(103, 'Raman');	// Partial // Recommended
+
+	Updating Records
+
+		UPDATE Sample123 SET City='Chennai' WHERE IdNo=103;
+
+		UPDATE Sample123 SET City='Mumbai'; // All update
+
+		UPDATE Sample123 SET Name='Tokyo' , City='Chennai' WHERE idno=102; // Multi Column Update
+
+	Deleting Records
+			DELETE FROM Sample123 WHERE IdNo=103;
+
+			DELETE FROM Sample123;  
+				vs 
+			TRUNCATE TABLE Sample123;
+
+DCL ( Data Control Language ) - Used for managing users and permissions
+
+			CREATE USER usr1 IDENTIFIED BY passwd;
+
+			GRANT create session, create table to usr1;
+	
+			REVOKE create session, create table from usr1;
+			
+
+TCL ( Transaction Control Language )
+
+		INSERT INTO Sample123 VALUES ( 100 , 'Jack' ,'Delhi' );
+	
+		SAVEPOINT A;
+		
+		INSERT INTO Sample123 VALUES ( 101 , 'Jill' ,'Mumbai' );
+
+		SAVEPOINT B;
+
+		UPDATE Sample123 SET City='Chennai' WHERE IdNo=101;
+
+		COMMIT /  ROLLBACK / ROLLBACK TO  A/B
+
+DQL(Data Query Language)
+		
+		select what from where?
+		
+		select col ,col /* from table;
+
+		select * from Employee;
+
+		select empno,FirstName from Employee;
+
+Task:
+		create a table as Follows;		
+
+		table Name : Employee
+		Columns
+			name     type 
+		        ----------------------------------
+		            EmpNo        number
+		            FName        varchar2(20)
+		            LName        varchar2(20)
+		            DOJ            date
+		            Salary         number
+
+Insert the following records to it:
+
+WAQ to display the EmpNO,FirstName ,Salary of all employees.
+
+		select empno,firstname,salary from Employee;
+
+WAQ to display the EmpNO,FirstName ,Salary and 500 added to the salary with column name NEW_SAL of all employees.
+
+		select empno,firstname,salary,salary +500 as NEW_SAL from Employee;
+
+		select empno,firstname,salary,salary +500  NEW_SAL from Employee;
+
+		select empno,firstname,salary,salary +500 as "NEW SAL" from Employee;
+
+WAQ to display the Empno,FirstName,Salary and 10% Inremented salary as Updated Salary for all employees.
+
+		select empno,firstname,salary,salary*1.1 as "Updated Salary" from Employee;
+
+WAQ to display the FirstName and LastName together as NAME of all employees.
+
+		select FirstName||LastName as NAME from Employee;
+
+WAQ to display the Employee report as follows with Column alias DETAILS.
+
+	DETAILS
+	------------------
+	EmpNO 100 named Mark Waugh joined on 10-NOV-00 with salary 12000
+	EmpNO 101 named Steve Waugh joined on 10-Nov-05 with salary 69877
+		......
+
+	select 'EmpNO '||FirstName||' '||LastName||' joined on '||doj||' with salary '||salary as "DETAILS" from Employee;
+
+
+
+
+
+
+
+
+

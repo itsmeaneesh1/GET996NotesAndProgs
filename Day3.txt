@@ -1,0 +1,378 @@
+
+SORTING query results (ORDER BY)
+--------------------------------
+		select Employee_id ,First_Name,Last_Name from employees ORDER BY  First_Name
+		select Employee_id ,First_Name,Last_Name from employees ORDER BY  First_Name ASC
+		select Employee_id ,First_Name,Last_Name from employees ORDER BY  First_Name DESC
+		select Employee_id ,First_Name,Last_Name from employees ORDER BY  2
+		select Employee_id ,First_Name,Last_Name from employees ORDER BY  2 DESC
+	
+
+select Employee_id ,First_Name,Last_Name from employees ORDER BY  First_Name ASC , Last_Name DESC
+
+JOINS
+	Syntax:	THETA Style
+		ANSI    Style
+
+WAQ to display the employee_id , first_name and department_name of all employees.
+
+	
+		INNER JOIN / EQUI JOIN ( Inner Join is said to be Equi Join when  = operator used for comparing condition )
+		--------------------------------------
+
+		select e.Employee_Id , e.First_Name ,d.Department_Id ,d.Department_Name
+		from Employees e JOIN Departments d
+		ON e.Department_Id = d.Department_Id 
+
+WAQ to display the employee_id , first_name, department_name and Location_City of all employees. ( 3 Way join )
+
+		select e.Employee_Id , e.First_Name ,d.Department_Id ,d.Department_Name , loc.city
+		from Employees e JOIN Departments d
+		ON e.Department_Id = d.Department_Id
+		JOIN Locations loc ON d.location_id=loc.location_id;
+
+Additonal Condition
+
+WAQ to display the employee_id , first_name and department_name of all employees. Display the names Start with J.
+
+		select e.Employee_Id , e.First_Name ,d.Department_Id ,d.Department_Name
+		from Employees e JOIN Departments d
+		ON e.Department_Id = d.Department_Id  AND e.First_Name LIKE 'J%'
+		
+		or 
+
+		select e.Employee_Id , e.First_Name ,d.Department_Id ,d.Department_Name
+		from Employees e JOIN Departments d
+		ON e.Department_Id = d.Department_Id  WHERE e.First_Name LIKE 'J%'
+		
+	NON -EQUI Join
+		
+WAQ to display the empid , FirstName ,Salary and their Salary Grade .
+
+		select e.Employee_id , e.First_Name, e.Salary , sg.Grade
+		from Employees e JOIN SalGrade sg
+		ON e.Salary BETWEEN sg.lowsal AND sg.highsal;
+
+
+WAQ to display the Employee FirstName and Department Name regardless of they have been assigend to department or not.
+
+OUTER JOINS
+ 		-->LEFT OUTER  ( If want to display all records from Left table regardless of Join condition)
+
+		select e.First_Name , d.Department_Name
+		from Employees e LEFT OUTER JOIN Departments d
+		ON e.Department_Id = d.Department_Id 
+
+		-->RIGHT OUTER	( If want to display all records from Right table regardless of Join condition)
+		
+		select e.First_Name , d.Department_Name
+		from Employees e RIGHT OUTER JOIN Departments d
+		ON e.Department_Id = d.Department_Id 
+		
+		-->FULL OUTER	( union result of right and left outer joins)
+		select e.First_Name , d.Department_Name
+		from Employees e FULL OUTER JOIN Departments d
+		ON e.Department_Id = d.Department_Id 
+		
+WAQ to display the DepartmentName and Count of Employees in each Department. 
+			
+		select d.Department_Name,count(e.employee_id) EMP_COUNT
+		from Employees e  JOIN Departments d
+		ON e.Department_Id = d.Department_Id 
+		GROUP BY d.Department_Name;
+	
+
+WAQ to display the DepartmentName and Count of Employees in each Department. 
+	Display All Departments even if no employees in it also. Column alias EMP_COUNT.
+
+	select d.Department_Name,count(e.employee_id) EMP_COUNT
+		from Employees e  RIGHT OUTER JOIN Departments d
+		ON e.Department_Id = d.Department_Id 
+		GROUP BY d.Department_Name;
+	
+CROSS JOIN
+
+		select * from Employees CROSS JOIN Departments;
+
+SELF JOIN
+
+WAQ to display the All Employee's FirstName and Their manager's FirstName .
+
+		select e.First_Name as EmpName , m.First_Name as Manager_Name
+		from Employees e JOIN Employees m
+		ON e.manager_id=m.employee_id;
+
+
+Self Join Situation:
+	Posts
+	Pstid	Post	     		AnswerID
+	100	 Who invented JAVA		....
+	 101            James Goslin		100
+	 102	  Goslin			100
+	 103	  Some Goslin,,,		100
+
+SUBQUERY
+		OUTER QUERY  Expr	 (INNER QUERY)
+
+Single Row SubQuery
+
+WAQ  to display the employee who is getting minimum salary.
+
+	select * from Employees where salary = (select min(salary) from Employees );
+
+WAQ to display the employees who is having salary more than average salary in deptartment no 30 ?
+
+	select * from Employees where salary > (select avg(salary) from Employees where department_id=30);
+
+Multi Row Subqueries ( IN , ANY , ALL )
+------------------------------
+WAQ to display the employees who works in IT Related Departments.
+
+	select * from Employees where Department_Id IN
+		 (select department_id from Departments where department_name LIKE 'IT%');
+		
+ALL/ANY
+	select * from Employees where Salary > ANY (select salary from Employees where department_id=80);
+
+	select * from Employees where Salary > ALL (select salary from Employees where department_id=80);
+
+	select * from Employees where Department_Id =ANY
+		 (select department_id from Departments where department_name LIKE 'IT%');
+
+Correlated SubQuery
+
+WAQ display the empo,fname ,salary man maximum salary as MAXSAL of all employees.
+
+	select employee_id,first_name,salary ,(select max(salary) from Employees) as MAXSAL from Employees;	
+
+WAQ display the empo,fname ,deptno,salary man maximum salary in their department as MAXSAL of all employees.
+
+	select employee_id,first_name,department_id,salary ,
+		(select max(salary) from Employees where department_id= e.department_id) as MAXSAL
+		 		from Employees e;	
+
+VIEWs
+		CREATE OR REPLACE VIEW EmpView
+		AS
+		select Employee_id , First_Name,Last_Name ,Salary from Employees;
+
+		DESC EmpView;
+
+		CREATE OR REPLACE VIEW EmpView
+		AS
+		select Employee_id as EMPNO, First_Name as FNAME,Last_Name as LNAME ,Salary from Employees;
+
+		select * from EmpView;
+complex view
+----------------------
+		CREATE VIEW EmpDeptLoc
+		AS
+		select e.Employee_Id , e.First_Name ,d.Department_Id ,d.Department_Name , loc.city
+		from Employees e JOIN Departments d
+		ON e.Department_Id = d.Department_Id
+		JOIN Locations loc ON d.location_id=loc.location_id;
+
+		select * from EmpDeptLoc;
+		select * from EmpDeptLoc where employee_id BETWEEN 100 and 110;
+
+
+
+		Create or replace View DMLView
+		AS
+		select EmpNO,FirstName,LastName,DeptNo from Employee  where deptNo=10
+		WITH CHECK OPTION CONSTRAINT ckDep10;
+
+		insert into dmlview values(113,'Rahul','Gandhi',10 ); //VALILD
+		insert into dmlview values(113,'Rahul','Gandhi',30 ); //INVALILD -with check violates
+
+		Create or replace View DMLView
+		AS
+		select EmpNO,FirstName,LastName from Employee
+		WITH READ ONLY;
+
+		insert into DMLView values(201 ,'Jugnu','Rai'); //INVALID as DML Not Allowed 
+
+
+PLSQL ( Procedural Language SQL )
+
+		Block Types
+			ANONYMUS (UnNamed) , Procedures (Named) , Functions (Named)
+	--------------
+
+	DECLARE
+		variable declaration
+	BEGIN
+		Executable unit
+	EXCEPTION
+		If exception comes 
+	END;	
+	
+WA PLSQLP to display the FirstName of the employee with id 117?
+	
+	SET SERVEROUTPUT ON;
+
+	DECLARE
+		FName VARCHAR2(20);
+	BEGIN
+		SELECT  First_Name INTO FName 
+			from Employees WHERE Employee_id=117;
+		DBMS_OUTPUT.PUT_LINE('First Name is '|| FName);
+	END;
+	/
+
+WA PLSQL Program to get the LastName , Salary and HireDate of employee with id 110?
+
+	DECLARE
+		lname VARCHAR2(20);
+		sal   NUMBER;
+		hdate DATE;
+	BEGIN
+		SELECT  Last_Name,Salary,Hire_Date INTO lname,sal,hdate 
+			from Employees WHERE Employee_id=110;
+		DBMS_OUTPUT.PUT_LINE('Last Name is '|| lname);
+		DBMS_OUTPUT.PUT_LINE('Salary is '|| sal);
+		DBMS_OUTPUT.PUT_LINE('Joined Date is '|| hdate);
+	END;
+	/
+
+
+
+	DECLARE
+		FName Employees.First_Name%TYPE;
+		Sal  Employees.salary%TYPE;
+		NewSal  Sal%TYPE;
+	BEGIN
+		SELECT  First_Name,Salary INTO FName ,Sal
+			from Employees WHERE Employee_id=117;
+		NewSal := Sal+1000;
+		DBMS_OUTPUT.PUT_LINE('First Name is '|| FName);
+		DBMS_OUTPUT.PUT_LINE('Salary is '|| Sal);
+		DBMS_OUTPUT.PUT_LINE('Updated Salary is '|| NewSal);
+	END;
+	/
+
+
+Named PLSQL Blocks ( Procedures  / Functions)
+
+	Procedure
+
+			
+	 Make a non argument procedure for updating the employee salary by 10%.
+
+		CREATE OR REPLACE PROCEDURE  UpdEmpSal
+		AS
+		BEGIN
+			update DummyEmployees set salary=salary*1.1;
+		END;
+
+
+		BEGIN
+		    UpdEmpSal;
+		END
+
+		EXECUTE  UpdEmpSal;
+
+	Arguments in Procedure ( IN , OUT , INOUT )
+SHOW ERROR -- to see the last error
+
+		CREATE OR REPLACE PROCEDURE  ModifySalEmp( empno NUMBER , newsal IN NUMBER )
+		AS
+		BEGIN
+			update DummyEmployees set salary=newsal where employee_id=empno;
+			commit;
+		END;
+		
+		EXECUTE  ModifySalEmp(100,40000);
+
+
+		CREATE OR REPLACE PROCEDURE  GetSalEmp( empno NUMBER , sal OUT NUMBER )
+		AS
+		BEGIN
+			select salary INTO sal from Employees where Employee_id=empno;
+		END;
+
+		declare
+		     sal number;
+		begin
+		     GetSalEmp(100, sal);
+		      DBMS_OUTPUT.PUT_LINE('Salary is '|| sal);	
+		end;
+
+	
+		CREATE OR REPLACE PROCEDURE  GetSalEmp( vname IN OUT varchar2)
+		AS
+		BEGIN
+			vname:=upper(vname);
+		END;
+
+		declare
+		     cname varchar2(10) :='hello';
+		begin
+		     GetSalEmp(cname);
+		      DBMS_OUTPUT.PUT_LINE(cname);	
+		end;
+
+DROP VIEW  ViewName ,  DROP PROCEDURE Name 
+
+FUNCTION 
+
+		CREATE OR REPLACE FUNCTION  getEmpUpdated(empno  NUMBER)
+		RETURN NUMBER
+		IS
+		    sal number;
+		BEGIN
+			select salary into sal from employees where employee_id=empno;
+			RETURN sal;
+		END;
+		
+		select getEmpUpdated(100) from  dual;
+
+		select employee_id, getEmpUpdated(employee_id) from Employees;
+
+		begin
+ 			 dbms_output.put_line(getEmpUpdated(100));
+		end;
+				
+Create a function to accept two names as argument and return as  single concatenated name as title case .
+	 Call the function along with select query , pass employee firstname and lastname as argument.
+
+Expected:
+	select employee_id , getNameMerged(First_Name,Last_Name) as NAME from Employees.
+	
+	Employee_Id    NAME
+	100	        Steven King
+		....
+
+	CREATE OR REPLACE FUNCTION  getNameMerged(FName varchar2,LName varchar2)
+		RETURN varchar2
+		IS
+		   cname varchar2(20);
+		BEGIN
+			cname := initcap(FName||' '||LName);
+			RETURN cname;
+		END;
+
+
+
+
+JDK 1.8
+
+Eclipse Oxygen + / STS ( Spring Tool Suite )
+
+EE Developers
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+
