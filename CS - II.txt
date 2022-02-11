@@ -1,0 +1,52 @@
+Student Management Casestudy Day 2
+------------------------------------------------------
+
+Topics Covered
+----------------------
+Relationships (IS-A, HAS-A, Abstract classes and methods,Collections API)
+
+
+Plan
+------
+
+-Extend Course class with 
+   --DegreeCourse(Enum called as  level(Bachelors,Masters),boolean isPlacementAvailable)
+   --DiplomaCourse(Enum called as type(professional,academic)) 
+   --Modify Course class and introduce a method calculateMonthlyFee() with some base logic inside it)
+   --Override calculateMonthlyFee() in the child classes keeping the following rules:
+     --DegreeCourse class' calculateMonthlyFee() method:
+   		-- if placement is available, charge 10% of the total fees as placement service.
+     --DiplomaCourse class' calculateMonthlyFee() method:
+		-- if professional course then 10% processing fee extra will be charged
+		-- if academic then 5% will be charged
+
+
+- Next create Enroll class with the following structure:
+   - public class Enroll {
+		private Student student;
+		private Course course;
+		private LocalDate enrollmentDate;
+
+		//constructors & getters/setters
+     }
+	 
+	 - Explain has-a relationship and other concepts using Course class we wrote 
+
+- Now create an interface AppEngine with following methods:
+	-public void introduce(Course course); 
+	 -public void register(Student student);
+	 -public List<Student> listOfStudents();
+	 -public void enroll(Student student, Course course);
+	 -public List<Enroll> listOfEnrollments();
+
+
+- Then create InMemoryAppEngine class which will implement the AppEngine interface. 
+	For this implementation, use Collections as the data store:
+
+- As usual write App class with main method to test the above functionalities:
+  - Ask trainees to modify Info class by adding new methods for displaying Enrollment details as well
+
+- Finally modify Course class as an abstract class and modify calculateMonthlyFee as an abstract method
+
+
+

@@ -1,0 +1,68 @@
+Student Management Casestudy Day 1
+-------------------------------------------------------
+
+Topics Covered
+----------------------
+Class, Object, Variables(instance and static), Constructors, methods, getter/setters, datatypes, arrays
+
+
+Plan
+------
+
+- Create Student class (id, name, dateofbirth,static collegeName)
+  - Cover constructors(and overloaded constructors), getters and setters
+  - Cover difference between static & non-static members using collegeName attribute
+
+- Create class Info
+  - Write a method called as:
+	public void display(Student student) {
+                Console.WriteLine(student.getName() ....);
+		//Code here to display the details of given student
+	}
+
+- Next create App class with main method. Use main method to call the below scenario methods only. For ex:
+	public static void main(String[] args) {
+		scenario1();
+		//scenario2();
+		//scenario3();
+	}
+
+ Then:
+
+  - Write a method called as scenario1 to:
+	- Create few objects of Student class
+	- Call the display method of Info class
+
+  - Modify Student class and introduce a member variable called as phoneNumbers of array type:
+        - Accordingly, modify display method to display phone numbers of the student
+	- Call the display method of Info class
+	
+  - Next write a method called as scenario2 to:
+	- Create array of Student class and store few objects in it
+	- Demonstrate how to iterate over the array and call the display method for each student
+
+  - Next write a method called as scenario3 to:
+	- Take Student data as input from the user, store it in a Student object
+	- Repeat the above process using loops
+	- Use Arrays to store Student objects as covered in scenario2
+	- Finally iterate over the array to display all the collected data
+
+   -Write a method called scenario4 to:
+	- Take Student data as input from the user, store it in Student object
+	- Repeat the above process using loops
+	- Use ArrayList to store the Student objects as covered in scenario2  ( Exclude for Today )
+	- Finally iterate over the ArrayList to display all the collected data (cover foreach) ( Exclude for Today )
+      
+ - Cover difference between static non static methods by making the display method static of Info class
+
+- Now ask the trainees to create Course class on their own (id, name, duration, fees)
+  - Modify Info class by adding one more method:
+	public void display(Course course) {
+		//Code here to display the details of given course
+	}
+  - Ask them to practice some of the scenarios again
+ 
+- Organize the code using packages/namespaces (for ex: com.lti.casestudy.day1)
+
+
+
